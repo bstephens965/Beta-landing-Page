@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoJoy — Coming to Rochester</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple: #7C3AED;
+    --purple-dark: #5B21B6;
+    --purple-light: #EDE9FE;
+    --purple-mid: #A78BFA;
+    --black: #0D0D0D;
+    --off-white: #F7F5F0;
+    --warm-gray: #E8E4DC;
+    --text-muted: #6B6560;
+    --green: #059669;
+    --green-light: #D1FAE5;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--off-white);
+    color: var(--black);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* HEADER */
+  header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.25rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(247, 245, 240, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--warm-gray);
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+    color: var(--black);
+  }
+  .logo span { color: var(--purple); }
+
+  .badge-launching {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--purple);
+    background: var(--purple-light);
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid #C4B5FD;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8rem 2rem 4rem;
+    max-width: 760px;
+    margin: 0 auto;
+    z-index: 1;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--purple);
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 28px;
+    height: 2px;
+    background: var(--purple);
+    border-radius: 2px;
+  }
+
+  .hero-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(2.8rem, 7vw, 5rem);
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: var(--black);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title em {
+    font-style: normal;
+    color: var(--purple);
+  }
+
+  .hero-body {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--text-muted);
+    max-width: 540px;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+
+  .hero-body strong {
+    color: var(--black);
+    font-weight: 500;
+  }
+
+  /* BETA PERKS */
+  .perks-strip {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+
+  .perk {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--green-light);
+    border: 1px solid #A7F3D0;
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #065F46;
+  }
+
+  .perk-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    flex-shrink: 0;
+  }
+
+  /* CTA BUTTONS */
+  .cta-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    padding: 0.85rem 1.75rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .btn-primary {
+    background: var(--purple);
+    color: white;
+    box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+  }
+  .btn-primary:hover {
+    background: var(--purple-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.45);
+  }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-secondary {
+    background: white;
+    color: var(--black);
+    border: 1.5px solid var(--warm-gray);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .btn-secondary:hover {
+    border-color: #C4B5FD;
+    color: var(--purple);
+    transform: translateY(-1px);
+  }
+
+  /* SCROLL INDICATOR */
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 0;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: bob 2s ease-in-out infinite;
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(4px); }
+  }
+
+  /* DIVIDER */
+  .section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--warm-gray), transparent);
+    margin: 0 2rem;
+  }
+
+  /* FORMS SECTION */
+  .forms-section {
+    position: relative;
+    z-index: 1;
+    padding: 5rem 2rem;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .forms-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 640px) {
+    .forms-grid { grid-template-columns: 1fr; }
+  }
+
+  .form-card {
+    background: white;
+    border: 1px solid var(--warm-gray);
+    border-radius: 16px;
+    padding: 2rem;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .form-card:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    border-color: #C4B5FD;
+  }
+
+  .form-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .icon-purple { background: var(--purple-light); }
+  .icon-green { background: var(--green-light); }
+
+  .form-card h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.4rem;
+    color: var(--black);
+  }
+
+  .form-card p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+    font-weight: 300;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-bottom: 0.85rem;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  textarea {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    padding: 0.7rem 0.95rem;
+    border: 1.5px solid var(--warm-gray);
+    border-radius: 8px;
+    background: var(--off-white);
+    color: var(--black);
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    width: 100%;
+    resize: none;
+  }
+
+  input[type="text"]::placeholder,
+  input[type="email"]::placeholder,
+  textarea::placeholder {
+    color: #B0A89E;
+  }
+
+  input[type="text"]:focus,
+  input[type="email"]:focus,
+  textarea:focus {
+    border-color: var(--purple-mid);
+    box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15);
+    background: white;
+  }
+
+  .submit-btn {
+    width: 100%;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .submit-purple {
+    background: var(--purple);
+    color: white;
+  }
+  .submit-purple:hover { background: var(--purple-dark); transform: translateY(-1px); }
+
+  .submit-green {
+    background: var(--green);
+    color: white;
+  }
+  .submit-green:hover { background: #047857; transform: translateY(-1px); }
+
+  /* SUCCESS STATE */
+  .success-msg {
+    display: none;
+    text-align: center;
+    padding: 1rem;
+    color: var(--green);
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  /* LAUNCH TICKER */
+  .ticker-wrap {
+    overflow: hidden;
+    border-top: 1px solid var(--warm-gray);
+    border-bottom: 1px solid var(--warm-gray);
+    background: white;
+    padding: 0.7rem 0;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .ticker-track {
+    display: flex;
+    white-space: nowrap;
+    animation: ticker 22s linear infinite;
+    gap: 0;
+  }
+
+  .ticker-item {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    padding: 0 2.5rem;
+  }
+
+  .ticker-item span { color: var(--purple); margin-right: 2rem; }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 2.5rem 2rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    border-top: 1px solid var(--warm-gray);
+  }
+
+  footer strong { color: var(--black); font-weight: 500; }
+
+  /* ANIMATIONS */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp 0.7s ease forwards;
+  }
+  .fade-up:nth-child(1) { animation-delay: 0.1s; }
+  .fade-up:nth-child(2) { animation-delay: 0.2s; }
+  .fade-up:nth-child(3) { animation-delay: 0.3s; }
+  .fade-up:nth-child(4) { animation-delay: 0.4s; }
+  .fade-up:nth-child(5) { animation-delay: 0.5s; }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ACCENT BLOB */
+  .blob {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(167,139,250,0.12) 0%, transparent 70%);
+    top: -100px;
+    right: -150px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 2.5rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--black);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 400;
+  }
+
+  .stat-divider {
+    width: 1px;
+    background: var(--warm-gray);
+    align-self: stretch;
+  }
+</style>
+</head>
+<body>
+
+<div class="blob"></div>
+
+<header>
+  <div class="logo">Auto<span>Joy</span></div>
+  <div class="badge-launching">Launching in Rochester</div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow fade-up">Rochester, NY · Coming Soon</div>
+
+  <h1 class="hero-title fade-up">
+    Find a mechanic<br>you can actually<br><em>trust.</em>
+  </h1>
+
+  <div class="stat-row fade-up">
+    <div class="stat">
+      <span class="stat-num">2 in 3</span>
+      <span class="stat-label">Americans distrust<br>auto repair shops</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-num">$0</span>
+      <span class="stat-label">Cost to book<br>through AutoJoy</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat">
+      <span class="stat-num">1 tap</span>
+      <span class="stat-label">To book, track,<br>and pay</span>
+    </div>
+  </div>
+
+  <p class="hero-body fade-up">
+    AutoJoy connects Rochester drivers to <strong>independent shops they can trust</strong> — with upfront pricing, online booking, and real-time SMS updates. Built by a student who got burned. Launching here first.
+  </p>
+
+  <div class="perks-strip fade-up">
+    <div class="perk"><span class="perk-dot"></span>Beta testers get priority access</div>
+    <div class="perk"><span class="perk-dot"></span>Free premium for early signups</div>
+    <div class="perk"><span class="perk-dot"></span>Shape the product before launch</div>
+  </div>
+
+  <div class="cta-group fade-up">
+    <a href="#signup" class="btn btn-primary">Get early access →</a>
+    <a href="#refer" class="btn btn-secondary">Refer a shop</a>
+  </div>
+
+  <div class="scroll-hint">↓ &nbsp; join the waitlist</div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="ticker-item"><span>★</span> Launching in Rochester, NY</span>
+    <span class="ticker-item"><span>★</span> Beta testers get free premium</span>
+    <span class="ticker-item"><span>★</span> Independent shops only</span>
+    <span class="ticker-item"><span>★</span> Built by a local student</span>
+    <span class="ticker-item"><span>★</span> You don't pay unless you earn</span>
+    <span class="ticker-item"><span>★</span> Launching in Rochester, NY</span>
+    <span class="ticker-item"><span>★</span> Beta testers get free premium</span>
+    <span class="ticker-item"><span>★</span> Independent shops only</span>
+    <span class="ticker-item"><span>★</span> Built by a local student</span>
+    <span class="ticker-item"><span>★</span> You don't pay unless you earn</span>
+  </div>
+</div>
+
+<!-- FORMS -->
+<section class="forms-section">
+  <div class="forms-grid">
+
+    <!-- NOTIFY FORM -->
+    <div class="form-card" id="signup">
+      <div class="form-card-icon icon-purple">🔔</div>
+      <h2>Get notified at launch</h2>
+      <p>Drop your email and you'll be the first to know when AutoJoy goes live in Rochester — plus you'll lock in beta perks before the public.</p>
+      <form onsubmit="handleNotify(event)">
+        <div class="input-group">
+          <input type="text" placeholder="Your first name" id="notify-name" required />
+          <input type="email" placeholder="Email address" id="notify-email" required />
+        </div>
+        <button type="submit" class="submit-btn submit-purple">Notify me at launch →</button>
+      </form>
+      <div class="success-msg" id="notify-success">✓ You're on the list. We'll be in touch before anyone else.</div>
+      <p style="font-size:0.75rem; color: var(--text-muted); margin-top: 0.75rem; margin-bottom: 0;">No spam. One email when we launch. That's it.</p>
+    </div>
+
+    <!-- REFER SHOP FORM -->
+    <div class="form-card" id="refer">
+      <div class="form-card-icon icon-green">🔧</div>
+      <h2>Refer a shop you trust</h2>
+      <p>Know a Rochester mechanic who actually deserves more business? Tell us who they are and we'll reach out to get them listed first.</p>
+      <form onsubmit="handleRefer(event)">
+        <div class="input-group">
+          <input type="text" placeholder="Shop name" id="shop-name" required />
+          <input type="text" placeholder="Neighborhood or address (optional)" id="shop-location" />
+          <textarea rows="2" placeholder="Why do you trust them? (optional)" id="shop-why"></textarea>
+        </div>
+        <button type="submit" class="submit-btn submit-green">Refer this shop →</button>
+      </form>
+      <div class="success-msg" id="refer-success" style="color: var(--green);">✓ Got it — we'll track them down. Thank you.</div>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <p>Built in Rochester by a student who got burned once and decided to fix it.</p>
+  <p style="margin-top: 0.5rem;"><strong>AutoJoy</strong> · Rochester, NY · autojoy.com</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const { createClient } = supabase;
+  const sb = createClient(
+    'https://aavwevfrvwrjdwqwmfsv.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFhdndldmZydndyamR3cXdtZnN2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMzNDcyOTMsImV4cCI6MjA4ODkyMzI5M30.BOSKGKbUu-5qWmTVeMmxDhRs-0-MNSFxb1-urM5rJkY'
+  );
+
+  async function handleNotify(e) {
+    e.preventDefault();
+    const name = document.getElementById('notify-name').value;
+    const email = document.getElementById('notify-email').value;
+    const { error } = await sb.from('beta_signups').insert({ name, email });
+    if (!error) {
+      e.target.style.display = 'none';
+      document.getElementById('notify-success').style.display = 'block';
+    } else {
+      alert('Something went wrong — try again.');
+    }
+  }
+
+  async function handleRefer(e) {
+    e.preventDefault();
+    const shop_name = document.getElementById('shop-name').value;
+    const location = document.getElementById('shop-location').value;
+    const reason = document.getElementById('shop-why').value;
+    const { error } = await sb.from('shop_referrals').insert({ shop_name, location, reason });
+    if (!error) {
+      e.target.style.display = 'none';
+      document.getElementById('refer-success').style.display = 'block';
+    } else {
+      alert('Something went wrong — try again.');
+    }
+  }
+</script>
+</body>
+</html>
