@@ -627,9 +627,9 @@
   async function handleRefer(e) {
     e.preventDefault();
     const shop_name = document.getElementById('shop-name').value;
-    const shop_location = document.getElementById('shop-location').value;
+    const location = document.getElementById('shop-location').value;
     const reason = document.getElementById('shop-why').value;
-    const { error } = await sb.from('shop_referrals').insert({ shop_name, shop_location, reason });
+    const { error } = await sb.from('shop_referrals').insert({ shop_name, location, reason });
     if (!error) {
       e.target.style.display = 'none';
       document.getElementById('refer-success').style.display = 'block';
