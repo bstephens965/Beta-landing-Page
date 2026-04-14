@@ -629,7 +629,7 @@
     const shop_name = document.getElementById('shop-name').value;
     const location = document.getElementById('shop-location').value;
     const reason = document.getElementById('shop-why').value;
-    const { error } = await sb.from('shop_referrals').insert({ shop_name, location, reason });
+    const { error } = await sb.from('shop_referrals_beta').insert({ shop_name, location, reason });
     if (!error) {
       e.target.style.display = 'none';
       document.getElementById('refer-success').style.display = 'block';
